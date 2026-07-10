@@ -1,4 +1,4 @@
-"""
+﻿"""
 Robot AI Control Center v1.0
 
 Global configuration.
@@ -52,7 +52,7 @@ SEARCH_TIMEOUT = 3
 # CAMERA
 # ---------------------------------------------------------------------
 
-DEFAULT_CAMERA_URL = "http://192.168.4.1:81/stream"
+DEFAULT_CAMERA_URL = "http://192.168.0.18:81/stream"
 
 FRAME_WIDTH = 640
 FRAME_HEIGHT = 480
@@ -61,7 +61,7 @@ FRAME_HEIGHT = 480
 # ROBOT
 # ---------------------------------------------------------------------
 
-DEFAULT_ROBOT_IP = "192.168.4.1"
+DEFAULT_ROBOT_IP = "192.168.0.18"
 
 COMMAND_TIMEOUT = 2
 
@@ -116,3 +116,4 @@ SEARCH_PAUSE = 0.2
 WATCHDOG_TIMEOUT = 5
 
 EMERGENCY_STOP = True
+
