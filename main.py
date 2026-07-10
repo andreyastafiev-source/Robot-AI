@@ -29,7 +29,7 @@ from storage.photo_manager import PhotoManager
 
 camera = ESP32Camera(
     config.DEFAULT_CAMERA_URL,
-    False
+    True
 )
 
 
