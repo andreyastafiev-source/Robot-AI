@@ -1,4 +1,4 @@
-﻿"""
+"""
 Robot AI Control Center v1.0
 
 Main application.
