@@ -1,4 +1,4 @@
-import cv2
+﻿import cv2
 
 
 from core import config
@@ -28,8 +28,8 @@ from storage.photo_manager import PhotoManager
 # =========================
 
 camera = ESP32Camera(
-    config.CAMERA_STREAM,
-    config.VIDEO_FLIP
+    config.DEFAULT_CAMERA_URL,
+    False
 )
 
 
@@ -41,7 +41,7 @@ camera = ESP32Camera(
 
 detector = AnimalDetector(
     config.YOLO_MODEL,
-    config.YOLO_CONFIDENCE
+    config.CONFIDENCE
 )
 
 
@@ -52,7 +52,7 @@ detector = AnimalDetector(
 # =========================
 
 robot = RobotController(
-    config.ROBOT_URL
+    ("http://" + config.DEFAULT_ROBOT_IP)
 )
 
 
@@ -110,7 +110,7 @@ camera.connect()
 
 
 print(
-    "Robot AI запущен"
+    "Robot AI Р·Р°РїСѓС‰РµРЅ"
 )
 
 
@@ -143,12 +143,12 @@ try:
 
         animal = analyze(
             result,
-            config.ANIMAL_CONFIDENCE
+            config.CONFIDENCE
         )
 
 
 
-        # ДИАГНОСТИКА
+        # Р”РРђР“РќРћРЎРўРРљРђ
 
         print(
             "ANIMAL TEST:",
@@ -173,7 +173,7 @@ try:
 
 
 
-        # отображение YOLO
+        # РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ YOLO
 
         image = result.plot()
 

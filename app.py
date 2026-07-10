@@ -1,4 +1,4 @@
-"""
+﻿"""
 Robot AI Control Center v1.0
 
 Main application.
@@ -17,7 +17,7 @@ from pathlib import Path
 
 import customtkinter as ctk
 
-from config import (
+from core.config import (
     PROJECT_NAME,
     PROJECT_VERSION,
     WINDOW_WIDTH,
