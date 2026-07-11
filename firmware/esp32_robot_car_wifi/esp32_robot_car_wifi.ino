@@ -15,6 +15,7 @@
 
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <ESPmDNS.h>
 #include "esp_timer.h"
 #include "img_converters.h"
 #include "Arduino.h"
@@ -52,6 +53,7 @@ const char* password = "UCuQezasxE";
 #define MOTOR_R_PIN_2 15
 #define MOTOR_L_PIN_1 13
 #define MOTOR_L_PIN_2 12
+#define FLASH_LED_PIN 4
 
 int MOTOR_SPEED = 160; // 0-255, подберите под свою батарею
 
@@ -127,6 +129,14 @@ static esp_err_t stop_handler(httpd_req_t *req) {
   motorStop();
   return httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
 }
+static esp_err_t light_on_handler(httpd_req_t *req) {
+  digitalWrite(FLASH_LED_PIN, HIGH);
+  return httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
+}
+static esp_err_t light_off_handler(httpd_req_t *req) {
+  digitalWrite(FLASH_LED_PIN, LOW);
+  return httpd_resp_send(req, "OK", HTTPD_RESP_USE_STRLEN);
+}
 
 // ---------------------- HTTP: видеопоток ----------------------
 
@@ -199,6 +209,8 @@ void startCameraServer() {
   httpd_uri_t left_uri    = {.uri="/left", .method=HTTP_GET, .handler=left_handler, .user_ctx=NULL};
   httpd_uri_t right_uri   = {.uri="/right", .method=HTTP_GET, .handler=right_handler, .user_ctx=NULL};
   httpd_uri_t stop_uri    = {.uri="/stop", .method=HTTP_GET, .handler=stop_handler, .user_ctx=NULL};
+  httpd_uri_t light_on_uri  = {.uri="/light/on", .method=HTTP_GET, .handler=light_on_handler, .user_ctx=NULL};
+  httpd_uri_t light_off_uri = {.uri="/light/off", .method=HTTP_GET, .handler=light_off_handler, .user_ctx=NULL};
 
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
     httpd_register_uri_handler(camera_httpd, &index_uri);
@@ -207,6 +219,8 @@ void startCameraServer() {
     httpd_register_uri_handler(camera_httpd, &left_uri);
     httpd_register_uri_handler(camera_httpd, &right_uri);
     httpd_register_uri_handler(camera_httpd, &stop_uri);
+    httpd_register_uri_handler(camera_httpd, &light_on_uri);
+    httpd_register_uri_handler(camera_httpd, &light_off_uri);
   }
 
   config.server_port += 1;
@@ -226,6 +240,8 @@ void setup() {
   pinMode(MOTOR_R_PIN_2, OUTPUT);
   pinMode(MOTOR_L_PIN_1, OUTPUT);
   pinMode(MOTOR_L_PIN_2, OUTPUT);
+  pinMode(FLASH_LED_PIN, OUTPUT);
+  digitalWrite(FLASH_LED_PIN, LOW);
 
   Serial.begin(115200);
   Serial.setDebugOutput(false);
@@ -275,6 +291,10 @@ void setup() {
   }
   Serial.println("");
   Serial.println("WiFi connected");
+  if (MDNS.begin("robot-ai")) {
+    MDNS.addService("http", "tcp", 80);
+    Serial.println("mDNS: http://robot-ai.local");
+  }
   Serial.print("Stream: http://");
   Serial.print(WiFi.localIP());
   Serial.println(":81/stream");
